@@ -17,6 +17,19 @@ io.on("connection", (socket) => {
         console.log("text changed")
         socket.broadcast.emit("text-changed", text)
     })
+
+    socket.on("join-room", (code) => {
+        socket.join(code)
+        console.log(`Socket: ${socket.id} joined ${code}`)
+        socket.emit("room-joined", code)
+    })
+
+    socket.on("create-room", () => {
+        const code = Math.floor(Math.random() * 100).toString()
+        socket.join(code)
+        console.log(`Socket: ${socket.id} joined ${code}`)
+        socket.to(code).emit("room-joined", code)
+    })
 })
 
 

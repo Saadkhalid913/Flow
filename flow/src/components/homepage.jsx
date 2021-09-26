@@ -9,7 +9,11 @@ const Homepage = (props) => {
     useEffect(() => {
         if (!Socket) return
         console.log("Added event Listener")
-        Socket.on("text-changed", (text) => setText(text))
+        const handler = (text) => setText(text)
+        Socket.on("text-changed", )
+        
+
+
     }, [Socket])
 
     return (

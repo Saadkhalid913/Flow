@@ -3,7 +3,8 @@ import {io} from "socket.io-client"
 import socketContext from "./contexts/socketContext"
 import {Switch, BrowserRouter, Route} from "react-router-dom"
 import Homepage from "./components/homepage"
-
+import RoomScreen from "./components/RoomScreen"
+import Room from "./components/Room"
 function App() {
   const [socket, setSocket] = useState()
 
@@ -17,7 +18,8 @@ function App() {
     <socketContext.Provider value = {socket}>
       <BrowserRouter>
         <Switch>
-          <Route to = "/" render = {(props) => <Homepage {...props} />} />
+          <Route path = "/room/:id" render = {(props) => <Room {...props} />}/>
+          <Route path = "/" render = {(props) => <RoomScreen {...props} />} />
         </Switch>
       </BrowserRouter>
     </socketContext.Provider>
