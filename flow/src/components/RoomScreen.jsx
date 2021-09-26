@@ -9,11 +9,12 @@ const RoomScreen = (props) => {
     useEffect(() => {
         if (!Socket) return
 
-        const handler = (code) => props.history.push("room/" + code)
+        const handler = (code) => props.history.push("/room/" + code)
         Socket.on("room-joined", handler)
 
         return () => Socket.off("room-joined", handler)
-    }, [Socket])
+        
+    }, [Socket, props])
 
 
     return (

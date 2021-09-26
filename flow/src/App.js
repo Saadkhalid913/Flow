@@ -2,7 +2,6 @@ import {useEffect, useState} from "react"
 import {io} from "socket.io-client"
 import socketContext from "./contexts/socketContext"
 import {Switch, BrowserRouter, Route} from "react-router-dom"
-import Homepage from "./components/homepage"
 import RoomScreen from "./components/RoomScreen"
 import Room from "./components/Room"
 function App() {
