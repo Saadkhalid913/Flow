@@ -6,7 +6,7 @@ import RoomScreen from "./components/RoomScreen"
 import Room from "./components/Room"
 function App() {
   const [socket, setSocket] = useState()
-  const [room, setRoom] = useState(null)
+  const [room, setRoom] = useState()
 
   useEffect(() => {
     const s = io("http://localhost:4000")

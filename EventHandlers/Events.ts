@@ -1,5 +1,7 @@
 const AddEvents = (io) => {
 
+    const rooms = new Map()
+
 io.on("connection", (socket) => {
     socket.on("update-text", (text, room) => {
         console.log("text changed in room: " + room )
@@ -11,14 +13,15 @@ io.on("connection", (socket) => {
         if (!code) return 
         socket.join(code)
         console.log(`Socket: ${socket.id} joined ${code}`)
-        socket.emit("room-joined", code)
+        socket.emit("room-joined", code, false)
     })
 
     socket.on("create-room", () => {
         const code = Math.floor(Math.random() * 100).toString()
         socket.join(code)
-        console.log(`Socket: ${socket.id} joined ${code}`)
-        socket.emit("room-joined", code)
+        console.log(`Socket: ${socket.id} created ${code}`)
+        rooms.set(code, socket.id)
+        socket.emit("room-joined", code, true)
     })
 
     socket.on("canvas-edited", (x1,y1,x2,y2, room) => {

@@ -41,9 +41,9 @@ import socketContext from '../contexts/socketContext'
             canvas.current.addEventListener("mousemove", e => {
                 if (MouseDown.current) {
                     draw(x, y, e.offsetX, e.offsetY)
+                    Socket.emit("canvas-edited", x, y, e.offsetX, e.offsetY, room)
                     x = e.offsetX
                     y = e.offsetY
-                    Socket.emit("canvas-edited", x, y, e.offsetX, e.offsetY, room)
                 }
             })
     
