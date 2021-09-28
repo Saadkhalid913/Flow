@@ -4,10 +4,8 @@ import socketContext from '../contexts/socketContext'
  const Canvas = (props) => {
     const canvas = useRef()
     let MouseDown = useRef(false)
-
+    let total = useRef(0)
     const {Socket, room} = useContext(socketContext);
-    console.log(room)
-    
 
     const draw = (x, y, x2, y2) => {
         const ctx = canvas.current.getContext("2d")
@@ -18,9 +16,9 @@ import socketContext from '../contexts/socketContext'
         ctx.lineTo(x2,y2);
         ctx.stroke();
         ctx.closePath();
-
     }
 
+   
     useEffect(() => {
         
         if (canvas.current) {
@@ -41,9 +39,10 @@ import socketContext from '../contexts/socketContext'
             canvas.current.addEventListener("mousemove", e => {
                 if (MouseDown.current) {
                     draw(x, y, e.offsetX, e.offsetY)
-                    Socket.emit("canvas-edited", x, y, e.offsetX, e.offsetY, room)
+                    // Socket.emit("canvas-edited", x, y, e.offsetX, e.offsetY, room)
                     x = e.offsetX
                     y = e.offsetY
+                    Socket.emit("canvas-image-edited", canvas.current.toDataURL("image/png"), room)
                 }
             })
     
@@ -51,13 +50,36 @@ import socketContext from '../contexts/socketContext'
     })
 
     useEffect(() => {
+
+        const drawIMG = (data) => {
+            const ctx = canvas.current.getContext("2d")
+            var img = new Image();
+            img.src = data;
+            img.onload = function() {
+                ctx.drawImage(img, 0, 0);
+            }
+        }
+    
         if (!Socket) return
-        const handler = (x, y, offsetX, offsetY) => draw(x, y, offsetX, offsetY)
-        Socket.on("canvas-update", handler)
+        const handler = (data) => {
+            total.current += data.length
+            console.log(total.current)
+            drawIMG(data)
+        }
+        Socket.on("canvas-image-update", handler)
 
-        return () => Socket.off("canvas-update", handler)
+        return () => Socket.off("canvas-image-update", handler)
 
-    }, [Socket])
+    }, [Socket, props])
+
+    // useEffect(() => {
+    //     if (!Socket) return
+    //     const handler = (x, y, offsetX, offsetY) => draw(x, y, offsetX, offsetY)
+    //     Socket.on("canvas-update", handler)
+
+    //     return () => Socket.off("canvas-update", handler)
+
+    // }, [Socket])
 
     return <canvas ref = {canvas} width = {props.width} height = {props.height} />
 }

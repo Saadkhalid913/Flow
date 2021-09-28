@@ -8,7 +8,7 @@ const Room = (props) => {
 
     return (
     <div className = "room-page-wrapper">
-            <Canvas  width = {900} height = {600}/>
+            <Canvas  width = {1600} height = {900}/>
     </div>
     )
 }
