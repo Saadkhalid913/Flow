@@ -4,7 +4,7 @@ import Canvas from './Canvas'
 const Room = (props) => {
     const [text, setText] = useState("")
 
-    const {Socket} = useContext(socketContext)
+    const {Socket, room} = useContext(socketContext)
     useEffect(() => {
         if (!Socket) return
         const handler = (text) => setText(text)
@@ -12,6 +12,7 @@ const Room = (props) => {
         return () => Socket.off("text-changed", handler)
     }, [setText, Socket])
 
+    if (!room) props.history.replace("/")
 
     return (
     <div className = "room-page-wrapper">

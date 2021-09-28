@@ -21,7 +21,9 @@ io.on("connection", (socket) => {
         socket.emit("room-joined", code)
     })
 
-    socket.on("canvas-edited", (x,y, room) => console.log(x,y, `Room: ${room}`))
+    socket.on("canvas-edited", (x1,y1,x2,y2, room) => {
+        socket.to(room).emit("canvas-update", x1,y1,x2,y2)
+    })
 })
 
 }

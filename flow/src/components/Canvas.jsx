@@ -9,25 +9,41 @@ import socketContext from '../contexts/socketContext'
     console.log(room)
     
 
-    const draw = (x, y) => {
+    const draw = (x, y, x2, y2) => {
         const ctx = canvas.current.getContext("2d")
+        ctx.beginPath();
         ctx.lineWidth = 10;
         ctx.lineCap = "round";
-        ctx.lineTo(x,y);
-        ctx.stroke();
-        ctx.beginPath();
         ctx.moveTo(x,y);
+        ctx.lineTo(x2,y2);
+        ctx.stroke();
+        ctx.closePath();
+
     }
 
     useEffect(() => {
+        
         if (canvas.current) {
-            canvas.current.addEventListener("mousedown", () => MouseDown.current = true)
-            canvas.current.addEventListener("mouseup", () => MouseDown.current = false)
+            let x = 0
+            let y = 0
+
+            canvas.current.addEventListener("mousedown", (e) => {
+                x = e.offsetX
+                y = e.offsetY
+                MouseDown.current = true}
+            )
+
+            canvas.current.addEventListener("mouseup", (e) => {
+                x = e.offsetX
+                y = e.offsetY
+                MouseDown.current = false
+            })
             canvas.current.addEventListener("mousemove", e => {
                 if (MouseDown.current) {
-                    console.log(e.layerX, e.layerY)
-                    draw(e.layerX, e.layerY)
-                    Socket.emit("canvas-edited", e.layerX, e.layerY, room)
+                    draw(x, y, e.offsetX, e.offsetY)
+                    x = e.offsetX
+                    y = e.offsetY
+                    Socket.emit("canvas-edited", x, y, e.offsetX, e.offsetY, room)
                 }
             })
     
@@ -36,7 +52,7 @@ import socketContext from '../contexts/socketContext'
 
     useEffect(() => {
         if (!Socket) return
-        const handler = (x,y) => console.log(x,y)
+        const handler = (x, y, offsetX, offsetY) => draw(x, y, offsetX, offsetY)
         Socket.on("canvas-update", handler)
 
         return () => Socket.off("canvas-update", handler)
