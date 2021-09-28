@@ -3,18 +3,21 @@ import socketContext from '../contexts/socketContext'
 
 const RoomScreen = (props) => {
     const [code, setCode] = useState("")
-    console.log("Rendering...")
-    const Socket = useContext(socketContext)
+    const {Socket, setRoom} = useContext(socketContext)
 
     useEffect(() => {
         if (!Socket) return
 
-        const handler = (code) => props.history.push("/room/" + code)
+        const handler = (code) => {
+            setRoom(code)
+            props.history.push("/room/" + code)
+        }
+
         Socket.on("room-joined", handler)
 
         return () => Socket.off("room-joined", handler)
         
-    }, [Socket, props])
+    }, [Socket, props, setRoom])
 
 
     return (

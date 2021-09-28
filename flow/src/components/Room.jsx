@@ -4,10 +4,9 @@ import Canvas from './Canvas'
 const Room = (props) => {
     const [text, setText] = useState("")
 
-    const Socket = useContext(socketContext)
+    const {Socket} = useContext(socketContext)
     useEffect(() => {
         if (!Socket) return
-
         const handler = (text) => setText(text)
         Socket.on("text-changed", handler)
         return () => Socket.off("text-changed", handler)

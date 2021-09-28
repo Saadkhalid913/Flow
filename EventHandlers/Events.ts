@@ -20,6 +20,8 @@ io.on("connection", (socket) => {
         console.log(`Socket: ${socket.id} joined ${code}`)
         socket.emit("room-joined", code)
     })
+
+    socket.on("canvas-edited", (x,y, room) => console.log(x,y, `Room: ${room}`))
 })
 
 }
