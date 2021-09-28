@@ -1,9 +1,8 @@
-import React, { useContext, useState, useEffect, useRef } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import socketContext from '../contexts/socketContext'
-
+import Canvas from './Canvas'
 const Room = (props) => {
     const [text, setText] = useState("")
-    const canvas = useRef()
 
     const Socket = useContext(socketContext)
     useEffect(() => {
@@ -14,9 +13,6 @@ const Room = (props) => {
         return () => Socket.off("text-changed", handler)
     }, [setText, Socket])
 
-    if (canvas.current) {
-        canvas.current.addEventListener("mousemove", e => console.log(e.layerX, e.layerY))
-    }
 
     return (
     <div className = "room-page-wrapper">
@@ -24,7 +20,7 @@ const Room = (props) => {
             setText(e.target.value)
             Socket.emit("update-text", e.target.value, props.match.params.id)
             }} />  */}
-            <canvas ref = {canvas}  width = {900} height = {600}/>
+            <Canvas  width = {900} height = {600}/>
     </div>
     )
 }
