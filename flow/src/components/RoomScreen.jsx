@@ -18,11 +18,15 @@ const RoomScreen = (props) => {
 
 
     return (
-        <div>
-            <input onChange = {(e) => {setCode(e.target.value)}} />
-            <button onClick ={() => Socket.emit("join-room", code)}>Join Room</button>
-            <button onClick ={() => Socket.emit("create-room")}>Create Room</button>
-        </div>
+       <div className = "room-join-screen-wrapper">
+            <div className = "room-join-box">
+                <div>
+                    <input placeholder = "room code" onChange = {(e) => {setCode(e.target.value)}} />
+                    <button onClick ={() => Socket.emit("join-room", code)}>Join Room</button>
+                </div>
+               <button onClick ={() => Socket.emit("create-room")}>Create Room</button>
+            </div>
+       </div>
     )
 
 }

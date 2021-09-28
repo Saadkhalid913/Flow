@@ -1,0 +1,47 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+
+}
+
+.room-join-screen-wrapper {
+    width: 100vw;
+    height: 100vh;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.room-join-box {
+    width: min(28rem, 95vw);
+    height: min(20rem, 50vh);
+    background-color: aqua;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding: 4rem;
+    align-items: center;
+}
+
+.room-join-box > div {
+    display:flex;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+}
+
+.room-join-box > div > input {
+    width: 70%;
+    margin: 0.5rem;
+    height: 2rem;
+    padding: 0.25rem;
+
+}
+
+.room-join-box button {
+    height: 2rem;
+    width: 70%;
+
+}
