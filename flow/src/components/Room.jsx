@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import socketContext from '../contexts/socketContext'
 import Canvas from './Canvas'
+import FileBox from './FileBox'
 const Room = (props) => {
 
     const {room} = useContext(socketContext)
@@ -8,7 +9,8 @@ const Room = (props) => {
 
     return (
     <div className = "room-page-wrapper">
-            <Canvas  width = {1600} height = {900}/>
+            <Canvas id = "canvas-element" width = {window.screen.width * 0.85} height = {window.screen.width * 0.5}/>
+            <FileBox />
     </div>
     )
 }

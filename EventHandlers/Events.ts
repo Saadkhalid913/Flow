@@ -31,6 +31,10 @@ io.on("connection", (socket) => {
     socket.on("canvas-image-edited", (blob, room) => {
         socket.to(room).emit("canvas-image-update", blob)
     })
+
+    socket.on("file-upload", (file, room) => {
+        console.log(file)
+    })
 })
 
 }
