@@ -20,28 +20,28 @@ import socketContext from '../contexts/socketContext'
 
    
     useEffect(() => {
-        
         if (canvas.current) {
+            const { width, height} = canvas.current
             let x = 0
             let y = 0
-
             canvas.current.addEventListener("mousedown", (e) => {
-                x = e.offsetX
-                y = e.offsetY
+                x = e.offsetX 
+                y = e.offsetY 
+                console.log(e)
                 MouseDown.current = true}
             )
 
             canvas.current.addEventListener("mouseup", (e) => {
-                x = e.offsetX
-                y = e.offsetY
+                x = e.offsetX 
+                y = e.offsetY 
                 MouseDown.current = false
             })
             canvas.current.addEventListener("mousemove", e => {
                 if (MouseDown.current) {
-                    draw(x, y, e.offsetX, e.offsetY)
+                    draw(x,y,e.offsetX, e.offsetY)
                     // Socket.emit("canvas-edited", x, y, e.offsetX, e.offsetY, room)
-                    x = e.offsetX
-                    y = e.offsetY
+                    x = e.offsetX 
+                    y = e.offsetY 
                     Socket.emit("canvas-image-edited", canvas.current.toDataURL("image/png"), room)
                 }
             })
@@ -50,13 +50,12 @@ import socketContext from '../contexts/socketContext'
     })
 
     useEffect(() => {
-
         const drawIMG = (data) => {
             const ctx = canvas.current.getContext("2d")
             var img = new Image();
             img.src = data;
             img.onload = function() {
-                ctx.drawImage(img, 0, 0);
+                ctx.drawImage(img, 0, 0, canvas.current.width, canvas.current.height);
             }
         }
     
