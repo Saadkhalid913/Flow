@@ -7,6 +7,7 @@ const Room = (props) => {
     if (!room) props.history.replace("/")
     return (
     <div className = "room-page-wrapper">
+            {props.admin && <div>you are an admin</div>}
             <Canvas id = "canvas-element" width = {window.visualViewport.width * 0.8} />
             <FileBox />
     </div>

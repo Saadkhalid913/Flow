@@ -7,6 +7,7 @@ import Room from "./components/Room"
 function App() {
   const [socket, setSocket] = useState()
   const [room, setRoom] = useState()
+  const [isAdmin, setIsAdmin] = useState()
 
   useEffect(() => {
     const s = io("http://localhost:4000")
@@ -15,9 +16,10 @@ function App() {
   }, [setSocket])
 
   return (
-    <socketContext.Provider value = {{Socket: socket, room, setRoom}}>
+    <socketContext.Provider value = {{Socket: socket, room, setRoom, isAdmin, setIsAdmin}}>
       <BrowserRouter>
         <Switch>
+          <Route path = "/room/admin/:id" render = {(props) => <Room {...props} admin={true} />}/>
           <Route path = "/room/:id" render = {(props) => <Room {...props} />}/>
           <Route path = "/" render = {(props) => <RoomScreen {...props} />} />
         </Switch>

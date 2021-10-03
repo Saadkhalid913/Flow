@@ -3,21 +3,25 @@ import socketContext from '../contexts/socketContext'
 
 const RoomScreen = (props) => {
     const [code, setCode] = useState("")
-    const {Socket, setRoom} = useContext(socketContext)
+    const {Socket, setRoom, setIsAdmin} = useContext(socketContext)
 
     useEffect(() => {
         if (!Socket) return
 
-        const handler = (code) => {
+        const handler = (code, isAdmin) => {
             setRoom(code)
-            props.history.push("/room/" + code)
+            setIsAdmin(isAdmin)
+            if (isAdmin)
+                props.history.push("/room/admin/" + code)
+            else
+                props.history.push("/room/" + code)
         }
 
         Socket.on("room-joined", handler)
 
         return () => Socket.off("room-joined", handler)
         
-    }, [Socket, props, setRoom])
+    }, [Socket,setIsAdmin, props, setRoom])
 
 
     return (

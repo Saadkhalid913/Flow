@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useState } from 'react'
 import socketContext from '../contexts/socketContext'
 
 const FileBox = (props) => {
-    const {room, Socket} = useContext(socketContext);
-    const [files, setFiles] = useState([])
+    const {room, Socket, isAdmin} = useContext(socketContext);
+    // const [files, setFiles] = useState([])
 
     return (
         <div className = "file-box">

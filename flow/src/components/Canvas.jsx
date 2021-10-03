@@ -1,16 +1,26 @@
+import react from 'react'
 import React, {useRef,useEffect, useContext} from 'react'
+import { useState } from 'react'
 import socketContext from '../contexts/socketContext'
+import CanvasControls from './CanvasControls'
 
  const Canvas = (props) => {
     const canvas = useRef()
     let MouseDown = useRef(false)
-    let total = useRef(0)
-    const {Socket, room} = useContext(socketContext);
+    let color = useRef(10)
+    let penSize = useRef("#000000")
+    const {Socket, room, isAdmin} = useContext(socketContext);
 
+    
+    if (canvas.current) {
+        
+    }
     const draw = (x, y, x2, y2) => {
         const ctx = canvas.current.getContext("2d")
         ctx.beginPath();
-        ctx.lineWidth = 10;
+        ctx.strokeStyle = color.current;
+        ctx.lineWidth = penSize.current;
+        console.log("pen_size: " + ctx.lineWidth)
         ctx.lineCap = "round";
         ctx.moveTo(x,y);
         ctx.lineTo(x2,y2);
@@ -20,14 +30,12 @@ import socketContext from '../contexts/socketContext'
 
    
     useEffect(() => {
-        if (canvas.current) {
-            const { width, height} = canvas.current
+        if (canvas.current && isAdmin) {
             let x = 0
             let y = 0
             canvas.current.addEventListener("mousedown", (e) => {
                 x = e.offsetX 
                 y = e.offsetY 
-                console.log(e)
                 MouseDown.current = true}
             )
 
@@ -39,10 +47,10 @@ import socketContext from '../contexts/socketContext'
             canvas.current.addEventListener("mousemove", e => {
                 if (MouseDown.current) {
                     draw(x,y,e.offsetX, e.offsetY)
-                    // Socket.emit("canvas-edited", x, y, e.offsetX, e.offsetY, room)
+                    Socket.emit("canvas-edited", x, y, e.offsetX, e.offsetY, room)
                     x = e.offsetX 
                     y = e.offsetY 
-                    Socket.emit("canvas-image-edited", canvas.current.toDataURL("image/png"), room)
+                    // Socket.emit("canvas-image-edited", canvas.current.toDataURL("image/png"), room)
                 }
             })
     
@@ -61,8 +69,6 @@ import socketContext from '../contexts/socketContext'
     
         if (!Socket) return
         const handler = (data) => {
-            total.current += data.length
-            console.log(total.current)
             drawIMG(data)
         }
         Socket.on("canvas-image-update", handler)
@@ -71,16 +77,12 @@ import socketContext from '../contexts/socketContext'
 
     }, [Socket, props])
 
-    // useEffect(() => {
-    //     if (!Socket) return
-    //     const handler = (x, y, offsetX, offsetY) => draw(x, y, offsetX, offsetY)
-    //     Socket.on("canvas-update", handler)
 
-    //     return () => Socket.off("canvas-update", handler)
-
-    // }, [Socket])
-
-    return <canvas ref = {canvas} width = {props.width} height = {props.width * 9/16} />
+    return (
+        <react.Fragment>
+            <canvas ref = {canvas} width = {props.width} height = {props.width * 9/16} />
+            <CanvasControls onPenChange = {(value) => penSize.current = value} onColorChange = {value => color.current = value}  />
+        </react.Fragment>)
 }
 
 export default Canvas

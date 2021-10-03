@@ -1,5 +1,11 @@
 import { SocketAddress } from "net"
 
+interface room {
+    files: {},
+    admin: string,
+    usersCanEdit: boolean
+}
+
 const AddEvents = (io) => {
 
     const rooms = {} 
@@ -24,7 +30,7 @@ io.on("connection", (socket) => {
         socket.join(code)
         socket._rooms.push(code)
         console.log(`Socket: ${socket.id} created ${code}`)
-        rooms[code] =  {files: [], admin: socket.id}
+        rooms[code] =  {files: [], admin: socket.id, usersCanEdit: false}
         socket.emit("room-joined", code, true)
     })
 
@@ -37,14 +43,15 @@ io.on("connection", (socket) => {
     })
 
     socket.on("file-upload", (file, room) => {
-        rooms[room].files.push(file)
+        socket.to(room).emit("files-uploaded", file)
     })
 
     socket.on("disconnect", () => {
-        console.log(socket._rooms)
         for (let room of socket._rooms) {
             if (rooms[room].admin == socket.id) {
                 console.log(`Admin has left ${room}`)
+                socket.to(room).emit("room-closed")
+                rooms[room] = null
             }
         }
     })
