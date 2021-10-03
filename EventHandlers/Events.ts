@@ -55,6 +55,12 @@ io.on("connection", (socket) => {
             }
         }
     })
+
+    socket.on("canvas-cleared", (room:string) => {
+        if (socket.id === rooms[room].admin) {
+            socket.to(room).emit("canvas-cleared")
+        }
+    } )
 })
 
 }

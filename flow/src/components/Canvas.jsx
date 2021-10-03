@@ -1,6 +1,5 @@
 import react from 'react'
 import React, {useRef,useEffect, useContext} from 'react'
-import { useState } from 'react'
 import socketContext from '../contexts/socketContext'
 import CanvasControls from './CanvasControls'
 
@@ -12,15 +11,17 @@ import CanvasControls from './CanvasControls'
     const {Socket, room, isAdmin} = useContext(socketContext);
 
     
-    if (canvas.current) {
-        
+    const clear = () => {
+        Socket.emit("canvas-cleared", room)
+        const context = canvas.current.getContext('2d');
+        context.clearRect(0, 0, canvas.current.width, canvas.current.height)
     }
+
     const draw = (x, y, x2, y2) => {
         const ctx = canvas.current.getContext("2d")
         ctx.beginPath();
         ctx.strokeStyle = color.current;
         ctx.lineWidth = penSize.current;
-        console.log("pen_size: " + ctx.lineWidth)
         ctx.lineCap = "round";
         ctx.moveTo(x,y);
         ctx.lineTo(x2,y2);
@@ -28,6 +29,11 @@ import CanvasControls from './CanvasControls'
         ctx.closePath();
     }
 
+    useEffect(() => {
+        if (!isAdmin && Socket) {
+            Socket.on("canvas-cleared", () => clear())
+        }
+    })
    
     useEffect(() => {
         if (canvas.current && isAdmin) {
@@ -50,7 +56,7 @@ import CanvasControls from './CanvasControls'
                     Socket.emit("canvas-edited", x, y, e.offsetX, e.offsetY, room)
                     x = e.offsetX 
                     y = e.offsetY 
-                    // Socket.emit("canvas-image-edited", canvas.current.toDataURL("image/png"), room)
+                    Socket.emit("canvas-image-edited", canvas.current.toDataURL("image/png"), room)
                 }
             })
     
@@ -81,7 +87,7 @@ import CanvasControls from './CanvasControls'
     return (
         <react.Fragment>
             <canvas ref = {canvas} width = {props.width} height = {props.width * 9/16} />
-            <CanvasControls onPenChange = {(value) => penSize.current = value} onColorChange = {value => color.current = value}  />
+            <CanvasControls onClear = {clear} onPenChange = {(value) => penSize.current = value} onColorChange = {value => color.current = value}  />
         </react.Fragment>)
 }
 
