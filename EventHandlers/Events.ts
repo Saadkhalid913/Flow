@@ -1,17 +1,20 @@
+import { SocketAddress } from "net"
+
 const AddEvents = (io) => {
 
-    const rooms = new Map()
+    const rooms = {} 
 
 io.on("connection", (socket) => {
+    socket._rooms = []
+
     socket.on("update-text", (text, room) => {
-        console.log("text changed in room: " + room )
-        console.log(text)
         socket.to(room).emit("text-changed", text)
     })
 
     socket.on("join-room", (code) => {
         if (!code) return 
         socket.join(code)
+        socket._rooms.push(code)
         console.log(`Socket: ${socket.id} joined ${code}`)
         socket.emit("room-joined", code, false)
     })
@@ -19,8 +22,9 @@ io.on("connection", (socket) => {
     socket.on("create-room", () => {
         const code = Math.floor(Math.random() * 100).toString()
         socket.join(code)
+        socket._rooms.push(code)
         console.log(`Socket: ${socket.id} created ${code}`)
-        rooms.set(code, socket.id)
+        rooms[code] =  {files: [], admin: socket.id}
         socket.emit("room-joined", code, true)
     })
 
@@ -33,7 +37,16 @@ io.on("connection", (socket) => {
     })
 
     socket.on("file-upload", (file, room) => {
-        console.log(file)
+        rooms[room].files.push(file)
+    })
+
+    socket.on("disconnect", () => {
+        console.log(socket._rooms)
+        for (let room of socket._rooms) {
+            if (rooms[room].admin == socket.id) {
+                console.log(`Admin has left ${room}`)
+            }
+        }
     })
 })
 

@@ -80,7 +80,7 @@ import socketContext from '../contexts/socketContext'
 
     // }, [Socket])
 
-    return <canvas ref = {canvas} width = {props.width} height = {props.height} />
+    return <canvas ref = {canvas} width = {props.width} height = {props.width * 9/16} />
 }
 
 export default Canvas
