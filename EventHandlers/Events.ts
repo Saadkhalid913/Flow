@@ -42,13 +42,13 @@ io.on("connection", (socket) => {
         socket.to(room).emit("canvas-image-update", blob)
     })
 
-    socket.on("file-upload", (file, room) => {
-        socket.to(room).emit("files-uploaded", file)
+    socket.on("file-upload", (file, name, type,  room) => {
+        socket.to(room).emit("files-uploaded", file, name, type)
     })
 
     socket.on("disconnect", () => {
         for (let room of socket._rooms) {
-            if (rooms[room].admin == socket.id) {
+            if (rooms[room] && rooms[room].admin == socket.id) {
                 console.log(`Admin has left ${room}`)
                 socket.to(room).emit("room-closed")
                 rooms[room] = null
