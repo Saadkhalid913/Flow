@@ -9,7 +9,7 @@ const FileBox = (props) => {
         if (Socket){
             Socket.on("files-uploaded", (file, name, type) => {
                 console.log("File recieved")
-                console.log(new Blob([file], {type, name}))
+                setFiles([...files, {link: URL.createObjectURL(new Blob([file], {type, name})), name}])
             })
         }
     })
@@ -23,7 +23,7 @@ const FileBox = (props) => {
                 }
             }}/>}
             <div className = "filebox-files">
-                {files.map(f => <div>{f.name}</div>)}
+                {files.map(f => <div onClick = {() => window.open(f.link)}>{f.name}</div>)}
             </div>
         </div>
     )

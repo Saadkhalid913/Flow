@@ -96,7 +96,7 @@ import CanvasControls from './CanvasControls'
     return (
         <react.Fragment>
             <canvas ref = {canvas} width = {props.width} height = {props.width * 9/16} />
-            <CanvasControls onClear = {clear} onPenChange = {(value) => penSize.current = value} onColorChange = {value => color.current = value}  />
+            {isAdmin && <CanvasControls onClear = {clear} onPenChange = {(value) => penSize.current = value} onColorChange = {value => color.current = value}  />}
         </react.Fragment>)
 }
 
