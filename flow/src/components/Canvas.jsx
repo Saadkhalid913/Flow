@@ -4,19 +4,25 @@ import socketContext from '../contexts/socketContext'
 import CanvasControls from './CanvasControls'
 
  const Canvas = (props) => {
+    const {Socket, room, isAdmin} = useContext(socketContext);
+    
+    // Reference to MouseDown and canvas 
     const canvas = useRef()
     let MouseDown = useRef(false)
+
+
+    // reference to pen color and size 
     let color = useRef(10)
     let penSize = useRef("#000000")
-    const {Socket, room, isAdmin} = useContext(socketContext);
 
-    
+    //canvas clearing function 
     const clear = () => {
         Socket.emit("canvas-cleared", room)
         const context = canvas.current.getContext('2d');
         context.clearRect(0, 0, canvas.current.width, canvas.current.height)
     }
 
+    // canvas drawing function 
     const draw = (x, y, x2, y2) => {
         const ctx = canvas.current.getContext("2d")
         ctx.beginPath();
@@ -29,12 +35,14 @@ import CanvasControls from './CanvasControls'
         ctx.closePath();
     }
 
+    // clearing canvas 
     useEffect(() => {
         if (!isAdmin && Socket) {
             Socket.on("canvas-cleared", () => clear())
         }
     })
-   
+    
+    // Admin canvas editing controls 
     useEffect(() => {
         if (canvas.current && isAdmin) {
             let x = 0
@@ -63,6 +71,8 @@ import CanvasControls from './CanvasControls'
         }
     })
 
+
+    // Drawing image on update 
     useEffect(() => {
         const drawIMG = (data) => {
             const ctx = canvas.current.getContext("2d")
@@ -73,12 +83,11 @@ import CanvasControls from './CanvasControls'
             }
         }
     
-        if (!Socket) return
+        if (!Socket) return // returning if Socket has not yet connected 
         const handler = (data) => {
             drawIMG(data)
         }
         Socket.on("canvas-image-update", handler)
-
         return () => Socket.off("canvas-image-update", handler)
 
     }, [Socket, props])
