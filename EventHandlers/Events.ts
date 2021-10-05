@@ -1,5 +1,3 @@
-import { SocketAddress } from "net"
-
 interface room {
     files: {},
     admin: string,
@@ -8,6 +6,17 @@ interface room {
 
 const AddEvents = (io) => {
 
+
+    const GenerateJoinCode = () : string => {
+        let length = 6
+        let result           = '';
+        let characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let charactersLength = characters.length;
+        for ( var i = 0; i < length; i++ ) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
     const rooms = {} 
 
 io.on("connection", (socket) => {
@@ -17,19 +26,20 @@ io.on("connection", (socket) => {
         socket.to(room).emit("text-changed", text)
     })
 
-    socket.on("join-room", (code) => {
+    socket.on("join-room", (code, name) => {
         if (!code) return 
         socket.join(code)
+        socket._name = name
         socket._rooms.push(code)
         console.log(`Socket: ${socket.id} joined ${code}`)
         socket.emit("room-joined", code, false)
     })
 
-    socket.on("create-room", () => {
-        const code = Math.floor(Math.random() * 100).toString()
+    socket.on("create-room", (name) => {
+        const code = GenerateJoinCode()
         socket.join(code)
+        socket._name = name
         socket._rooms.push(code)
-        console.log(`Socket: ${socket.id} created ${code}`)
         rooms[code] =  {files: [], admin: socket.id, usersCanEdit: false}
         socket.emit("room-joined", code, true)
     })
@@ -64,5 +74,6 @@ io.on("connection", (socket) => {
 })
 
 }
+
 
 module.exports = AddEvents

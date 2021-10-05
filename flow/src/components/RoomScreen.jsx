@@ -4,7 +4,7 @@ import socketContext from '../contexts/socketContext'
 const RoomScreen = (props) => {
     const [code, setCode] = useState("")
     const {Socket, setRoom, setIsAdmin} = useContext(socketContext)
-
+    const [name, setName] = useState("")
     useEffect(() => {
         if (!Socket) return
 
@@ -27,11 +27,12 @@ const RoomScreen = (props) => {
     return (
        <div className = "room-join-screen-wrapper">
             <div className = "room-join-box">
+                <input onChange={e => setName(e.target.value)} />
                 <div>
                     <input placeholder = "room code" onChange = {(e) => {setCode(e.target.value)}} />
-                    <button onClick ={() => Socket.emit("join-room", code)}>Join Room</button>
+                    <button onClick ={() => Socket.emit("join-room", code, name)}>Join Room</button>
                 </div>
-               <button onClick ={() => Socket.emit("create-room")}>Create Room</button>
+               <button onClick ={() => Socket.emit("create-room", name)}>Create Room</button>
             </div>
        </div>
     )
