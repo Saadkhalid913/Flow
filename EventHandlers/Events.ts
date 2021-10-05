@@ -22,10 +22,7 @@ const AddEvents = (io) => {
 io.on("connection", (socket) => {
     socket._rooms = []
 
-    socket.on("update-text", (text, room) => {
-        socket.to(room).emit("text-changed", text)
-    })
-
+    // -------------------------------------- ROOM JOIN / LEAVE LISTENERS -------------------------------------- 
     socket.on("join-room", (code, name) => {
         if (!code) return 
         socket.join(code)
@@ -44,18 +41,6 @@ io.on("connection", (socket) => {
         socket.emit("room-joined", code, true)
     })
 
-    socket.on("canvas-edited", (x1,y1,x2,y2, room) => {
-        socket.to(room).emit("canvas-update", x1,y1,x2,y2)
-    })
-
-    socket.on("canvas-image-edited", (blob, room) => {
-        socket.to(room).emit("canvas-image-update", blob)
-    })
-
-    socket.on("file-upload", (file, name, type,  room) => {
-        socket.to(room).emit("files-uploaded", file, name, type)
-    })
-
     socket.on("disconnect", () => {
         for (let room of socket._rooms) {
             if (rooms[room] && rooms[room].admin == socket.id) {
@@ -66,14 +51,30 @@ io.on("connection", (socket) => {
         }
     })
 
+    // -------------------------------------- CANVAS LISTENERS -------------------------------------- 
+    // socket.on("canvas-edited", (x1,y1,x2,y2, room) => {
+    //     socket.to(room).emit("canvas-update", x1,y1,x2,y2)
+    // })
+
+    socket.on("canvas-image-edited", (blob, room) => {
+        socket.to(room).emit("canvas-image-update", blob)
+    })
+
     socket.on("canvas-cleared", (room:string) => {
         if (socket.id === rooms[room].admin) {
             socket.to(room).emit("canvas-cleared")
         }
     } )
-})
+    // -------------------------------------- FILE UPLOAD LISTENERS -------------------------------------- 
+    
+    socket.on("file-upload", (file, name, type,  room) => {
+        socket.to(room).emit("files-uploaded", file, name, type)
+    })
 
-}
+    
+
+    
+})}
 
 
 module.exports = AddEvents
