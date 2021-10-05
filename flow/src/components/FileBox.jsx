@@ -15,14 +15,15 @@ const FileBox = (props) => {
 
     return (
         <div className = "file-box">
-            {isAdmin && <input type = "file"  onChange = {e => {
+            {isAdmin && <input type = "file"  onChange = {async (e) => {
                 for (let file of e.target.files){
-                    Socket.emit("file-upload", file, file.name, file.type, room)
+                    const buffer = await file.arrayBuffer()
+                    Socket.emit("file-upload", buffer, file.name, file.type, room)
                     setFiles([...files, {link: URL.createObjectURL(new Blob([file], {type: file.type, name: file.name})), name: file.name}])
                 }
             }}/>}
             <div className = "filebox-files">
-                {files.map(f => <div className = "file-box-file" >
+                {files.map(f => <div key = {f.name} className = "file-box-file" >
                         <span onClick = {() => window.open(f.link)}>{f.name}</span>
                         {isAdmin && <button onClick = {() => {
                             const index = files.indexOf(f);
