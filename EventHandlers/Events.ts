@@ -4,6 +4,12 @@ interface room {
     usersCanEdit: boolean
 }
 
+interface Chat {
+    name: string,
+    message: string,
+    isOwn: boolean
+}
+
 const AddEvents = (io) => {
 
 
@@ -29,7 +35,7 @@ io.on("connection", (socket) => {
         socket._name = name
         socket._rooms.push(code)
         console.log(`Socket: ${socket.id} joined ${code}`)
-        socket.emit("room-joined", code, false)
+        socket.emit("room-joined", code,name, false)
     })
 
     socket.on("create-room", (name) => {
@@ -38,7 +44,7 @@ io.on("connection", (socket) => {
         socket._name = name
         socket._rooms.push(code)
         rooms[code] =  {files: [], admin: socket.id, usersCanEdit: false}
-        socket.emit("room-joined", code, true)
+        socket.emit("room-joined", code,name, true)
     })
 
     socket.on("disconnect", () => {
@@ -70,9 +76,11 @@ io.on("connection", (socket) => {
     socket.on("file-upload", (file, name, type,  room) => {
         socket.to(room).emit("files-uploaded", file, name, type)
     })
+    // -------------------------------------- CHAT LISTENERS -------------------------------------- 
 
-    
-
+    socket.on("new-chat", (message: string, name: string, room: string) => {
+        socket.to(room).emit("chat-recieved", {name, message, isOwn: false} as Chat)
+    })
     
 })}
 

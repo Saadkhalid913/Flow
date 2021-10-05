@@ -3,14 +3,14 @@ import socketContext from '../contexts/socketContext'
 
 const RoomScreen = (props) => {
     const [code, setCode] = useState("")
-    const {Socket, setRoom, setIsAdmin} = useContext(socketContext)
-    const [name, setName] = useState("")
+    const {Socket, name, setName, setRoom, setIsAdmin} = useContext(socketContext)
     useEffect(() => {
         if (!Socket) return
 
-        const handler = (code, isAdmin) => {
+        const handler = (code, name, isAdmin) => {
             setRoom(code)
             setIsAdmin(isAdmin)
+            setName(name)
             if (isAdmin)
                 props.history.push("/room/admin/" + code)
             else
@@ -21,7 +21,7 @@ const RoomScreen = (props) => {
 
         return () => Socket.off("room-joined", handler)
         
-    }, [Socket,setIsAdmin, props, setRoom])
+    }, [Socket, setIsAdmin,setName, props, setRoom])
 
 
     return (
