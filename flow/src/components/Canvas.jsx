@@ -12,8 +12,8 @@ import CanvasControls from './CanvasControls'
 
 
     // reference to pen color and size 
-    let color = useRef(10)
-    let penSize = useRef("#000000")
+    let color = useRef("#000000")
+    let penSize = useRef(10)
 
     //canvas clearing function 
     const clear = () => {

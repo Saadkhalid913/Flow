@@ -8,7 +8,6 @@ const FileBox = (props) => {
     useEffect(() => {
         if (Socket){
             Socket.on("files-uploaded", (file, name, type) => {
-                console.log("File recieved")
                 setFiles([...files, {link: URL.createObjectURL(new Blob([file], {type, name})), name}])
             })
         }
@@ -18,12 +17,20 @@ const FileBox = (props) => {
         <div className = "file-box">
             {isAdmin && <input type = "file"  onChange = {e => {
                 for (let file of e.target.files){
-                    console.log(file)
-                    Socket.emit("file-upload", file,file.name, file.type, room)
+                    Socket.emit("file-upload", file, file.name, file.type, room)
+                    setFiles([...files, {link: URL.createObjectURL(new Blob([file], {type: file.type, name: file.name})), name: file.name}])
                 }
             }}/>}
             <div className = "filebox-files">
-                {files.map(f => <div onClick = {() => window.open(f.link)}>{f.name}</div>)}
+                {files.map(f => <div className = "file-box-file" >
+                        <span onClick = {() => window.open(f.link)}>{f.name}</span>
+                        {isAdmin && <button onClick = {() => {
+                            const index = files.indexOf(f);
+                            const oldFiles = [...files]
+                            oldFiles.splice(index, 1)
+                            setFiles(oldFiles)
+                        }}>adaw</button>}
+                        </div>)}
             </div>
         </div>
     )
