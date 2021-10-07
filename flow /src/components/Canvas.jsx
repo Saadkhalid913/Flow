@@ -67,6 +67,35 @@ import CanvasControls from './CanvasControls'
                     Socket.emit("canvas-image-edited", canvas.current.toDataURL("image/png"), room)
                 }
             })
+
+            canvas.current.addEventListener("touchstart", (e) => {
+                e.preventDefault()
+
+                let bcr = e.target.getBoundingClientRect();
+                x = e.targetTouches[0].clientX - bcr.x;
+                y = e.targetTouches[0].clientY - bcr.y;
+                MouseDown.current = true}
+            )
+
+            canvas.current.addEventListener("touchend", (e) => {
+                e.preventDefault()
+                MouseDown.current = false
+            })
+            canvas.current.addEventListener("touchmove", e => {
+                e.preventDefault()
+
+                if (MouseDown.current) {
+                    let bcr = e.target.getBoundingClientRect();
+                    let x2 = e.targetTouches[0].clientX - bcr.x;
+                    let y2 = e.targetTouches[0].clientY - bcr.y;    
+
+                    draw(x,y,x2,y2)
+                    Socket.emit("canvas-edited", x, y, e.offsetX, e.offsetY, room)
+                    x = x2 
+                    y = y2 
+                    Socket.emit("canvas-image-edited", canvas.current.toDataURL("image/png"), room)
+                }
+            })
     
         }
     })

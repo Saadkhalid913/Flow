@@ -11,7 +11,7 @@ function App() {
   const [name, setName] = useState()
 
   useEffect(() => {
-    const s = io("http://localhost:4000")
+    const s = io("/")
     setSocket(s)
     return () => s.disconnect()
   }, [setSocket])
