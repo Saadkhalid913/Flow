@@ -1,4 +1,4 @@
-import React, { useContext , useRef, useEffect, useState} from 'react'
+import React, { useContext , useEffect, useState} from 'react'
 import SocketContext from "../../contexts/socketContext"
 import Chat from './Chat'
 import { IoIosArrowForward } from "react-icons/io"

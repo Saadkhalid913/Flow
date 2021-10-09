@@ -1,5 +1,7 @@
 import React, {useState,useEffect, useContext} from 'react'
 import socketContext from '../contexts/socketContext'
+import { toast } from "react-toastify"
+
 
 const RoomScreen = (props) => {
     const [code, setCode] = useState("")
@@ -23,16 +25,28 @@ const RoomScreen = (props) => {
         
     }, [Socket, setIsAdmin,setName, props, setRoom])
 
+    const JoinRoom = () => {
+        if (name && code) {
+            Socket.emit("join-room", code, name)}
+        else if (!code) toast.warn("Please enter the room code")
+        else if (!name) toast.warn("Please enter a name")}
+
+    const CreateRoom = () => {
+        if (name) {Socket.emit("create-room", name)}
+        else toast.warn("Please enter a name")
+    }
 
     return (
        <div className = "room-join-screen-wrapper">
             <div className = "room-join-box">
-                <input onChange={e => setName(e.target.value)} />
+                <div>
+                    <input placeholder = "Name" onChange={e => setName(e.target.value)} />
+                </div>
                 <div>
                     <input placeholder = "room code" onChange = {(e) => {setCode(e.target.value)}} />
-                    <button onClick ={() => Socket.emit("join-room", code, name)}>Join Room</button>
+                    <button onClick ={JoinRoom}>Join Room</button>
                 </div>
-               <button onClick ={() => Socket.emit("create-room", name)}>Create Room</button>
+               <button onClick ={CreateRoom}>Create Room</button>
             </div>
        </div>
     )
