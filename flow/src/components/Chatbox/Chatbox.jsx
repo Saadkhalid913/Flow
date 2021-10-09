@@ -1,11 +1,19 @@
-import React, { useContext , useEffect, useState} from 'react'
+import React, { useContext , useRef, useEffect, useState} from 'react'
 import SocketContext from "../../contexts/socketContext"
+import Chat from './Chat'
+import { IoIosArrowForward } from "react-icons/io"
+
 const ChatBox = (props) => {
     const [chats, setChats] = useState([])
     const {room, Socket, name} = useContext(SocketContext);
     const [message, setMessage] = useState("")
     const [inView, toggleView] = useState(false)
 
+    const SendChat = () => {
+        Socket.emit("new-chat", message, name, room)
+        const chat = {name, message, isOwn: true}
+        setChats([...chats, chat])
+    }
 
     useEffect(() => {
         if (!Socket) return
@@ -30,14 +38,13 @@ const ChatBox = (props) => {
        <React.Fragment>
            <button onClick = {() => toggleView(!inView)} > Toggle Chat</button>
             <div className = "chatbox" style = {Styles}>
-            <button onClick = {() => toggleView(false)}>Down</button>
+            <button className = "chatbox-toggle" onClick = {() => toggleView(false)}><IoIosArrowForward/></button>
             <div className = "chatbox-chats">
-                dawd
-                {chats.map(c => <div>{c.name + " -- " + c.message}</div>)}
+                {chats.map(c => <Chat key = {c.name + c.message + Math.random()} chat = {c} />)}
             </div>
             <div className= "chat-message-box">
-                <input onChange = {e => setMessage(e.target.value)}/>
-                <button onClick = {() => Socket.emit("new-chat", message, name, room)}>Send</button>
+                <input placeholder ="Write a message" onChange = {e => setMessage(e.target.value)}/>
+                <button onClick = {SendChat}>Send</button>
             </div>
         </div>
        </React.Fragment>
