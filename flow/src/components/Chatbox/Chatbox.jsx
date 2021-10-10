@@ -2,6 +2,7 @@ import React, { useContext , useEffect, useState} from 'react'
 import SocketContext from "../../contexts/socketContext"
 import Chat from './Chat'
 import { IoIosArrowForward } from "react-icons/io"
+import { BsChatRightText } from "react-icons/bs"
 
 const ChatBox = (props) => {
     const [chats, setChats] = useState([])
@@ -32,13 +33,16 @@ const ChatBox = (props) => {
     }, [setChats, Socket, chats]) 
 
     let Styles = {}
-    if (window.screen.width > 768 && inView) Styles = {right: "0%"} 
-    if (window.screen.width > 768 && !inView) Styles = {right: "-30%"} 
-    if (window.screen.width < 768 && !inView) Styles = {top: "100%"} 
-    if (window.screen.width < 768 && inView) Styles = {top: "10%"} 
+    
+    if (window.innerWidth > 768 && inView) Styles = {right: "0%"} 
+    if (window.innerWidth > 768 && !inView) Styles = {right: "-30%"} 
+    if (window.innerWidth < 768 && !inView) Styles = {top: "100%", right: "0%"} 
+    if (window.innerWidth < 768 && inView) Styles = {top: "10%", right: "0%"}
+
+    console.log("Styles: ", Styles, window.width)
     return (
        <React.Fragment>
-           <button onClick = {() => toggleView(!inView)} > Toggle Chat</button>
+           <button className = "chat-toggle-button" onClick = {() => toggleView(true)}><BsChatRightText/></button>
             <div className = "chatbox" style = {Styles}>
             <button className = "chatbox-toggle" onClick = {() => toggleView(false)}><IoIosArrowForward/></button>
             <div className = "chatbox-chats">
