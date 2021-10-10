@@ -16,7 +16,7 @@ function App() {
   const [name, setName] = useState()
 
   useEffect(() => {
-    const s = io("http://localhost:4000")
+    const s = io(process.env.REACT_APP_ROOT_URL)
     setSocket(s)
     return () => s.disconnect()
   }, [setSocket])
