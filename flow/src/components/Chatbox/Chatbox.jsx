@@ -39,7 +39,6 @@ const ChatBox = (props) => {
     if (window.innerWidth < 768 && !inView) Styles = {top: "100%", right: "0%"} 
     if (window.innerWidth < 768 && inView) Styles = {top: "10%", right: "0%"}
 
-    console.log("Styles: ", Styles, window.width)
     return (
        <React.Fragment>
            <button className = "chat-toggle-button" onClick = {() => toggleView(true)}><BsChatRightText/></button>
