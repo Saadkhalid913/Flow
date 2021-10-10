@@ -1,7 +1,13 @@
+import { Socket } from "socket.io";
+
 interface room {
-    files: {},
     admin: string,
-    usersCanEdit: boolean
+}
+
+interface SocketClient extends Socket {
+    _rooms: string[]
+    id: string,
+    _name: string,
 }
 
 interface Chat {
@@ -10,7 +16,7 @@ interface Chat {
     isOwn: boolean
 }
 
-const AddEvents = (io) => {
+const AddEvents = (io: any) => {
 
 
     const GenerateJoinCode = () : string => {
@@ -23,13 +29,16 @@ const AddEvents = (io) => {
         }
         return result;
     }
-    const rooms = {} 
 
-io.on("connection", (socket) => {
+    // ts-ignore
+    const rooms: any = {} 
+
+io.on("connection", (socket: SocketClient) => {
+    // @ts-ignore
     socket._rooms = []
 
     // -------------------------------------- ROOM JOIN / LEAVE LISTENERS -------------------------------------- 
-    socket.on("join-room", (code, name) => {
+    socket.on("join-room", (code: string, name: string) => {
         if (!code) return 
         socket.join(code)
         socket._name = name
@@ -38,7 +47,7 @@ io.on("connection", (socket) => {
         socket.emit("room-joined", code,name, false)
     })
 
-    socket.on("create-room", (name) => {
+    socket.on("create-room", (name: string) => {
         const code = GenerateJoinCode()
         socket.join(code)
         socket._name = name
