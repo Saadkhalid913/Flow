@@ -10,7 +10,7 @@ const Room = (props) => {
 
     window.addEventListener("resize", () => {
         setWindowWidth(window.innerWidth)}
-        )
+    )
 
     return (
     <div className = "room-page-wrapper">
