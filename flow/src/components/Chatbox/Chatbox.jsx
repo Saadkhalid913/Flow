@@ -10,9 +10,11 @@ const ChatBox = (props) => {
     const [inView, toggleView] = useState(false)
 
     const SendChat = () => {
+        if (!message) return
         Socket.emit("new-chat", message, name, room)
         const chat = {name, message, isOwn: true}
         setChats([...chats, chat])
+        setMessage("")
     }
 
     useEffect(() => {
@@ -43,7 +45,7 @@ const ChatBox = (props) => {
                 {chats.map(c => <Chat key = {c.name + c.message + Math.random()} chat = {c} />)}
             </div>
             <div className= "chat-message-box">
-                <input placeholder ="Write a message" onChange = {e => setMessage(e.target.value)}/>
+                <input placeholder ="Write a message" value={message} onChange = {e => setMessage(e.target.value)}/>
                 <button onClick = {SendChat}>Send</button>
             </div>
         </div>

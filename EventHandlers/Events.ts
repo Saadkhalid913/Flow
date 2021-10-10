@@ -73,8 +73,9 @@ io.on("connection", (socket) => {
     } )
     // -------------------------------------- FILE UPLOAD LISTENERS -------------------------------------- 
     
-    socket.on("file-upload", (file, name, type,  room) => {
-        socket.to(room).emit("files-uploaded", file, name, type)
+    socket.on("file-upload", async (file, name, type, room) => {
+        console.log(file, name, type, room)
+        // socket.to(room).emit("files-uploaded", file, name, type)
     })
     // -------------------------------------- CHAT LISTENERS -------------------------------------- 
 

@@ -9,7 +9,8 @@ const server = createServer(app)
 const io = require("socket.io")(server, {
     cors: {
         origin: "*"
-    }
+    },
+    maxHttpBufferSize: 1e8,
 });
 
 // adding event listeners 

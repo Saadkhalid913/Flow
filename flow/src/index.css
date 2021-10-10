@@ -156,21 +156,7 @@ canvas {
     flex-direction: column;
 }
 
-@media only screen and (max-width: 768px) {
-    .chatbox {
-        display: flex;
-        position: fixed;
-        width: 100vw;
-        height: 90%;
-        left: 0%;
-        top: 100%;
-        background-color: white;
-        box-shadow: 0 0 16px 2px grey;
-        flex-direction: column;
-        border-top-left-radius: 16px;
-        border-top-right-radius: 16px;
-    }
-}
+
 
 .chatbox > .chatbox-chats {
     height: 88%;
@@ -218,8 +204,13 @@ canvas {
     outline: none;
     border: none;
     font-size: 1.5rem;
+    width: 100%;
+    display:flex;
+    flex-direction: row;
     align-self: flex-start;
     background-color: transparent;
+    justify-content: flex-start;
+
 }
 
 
@@ -259,4 +250,25 @@ canvas {
     border-top-left-radius: 0;
     background-color: rgb(185, 185, 185);
     color: black
+}
+
+@media only screen and (max-width: 768px) {
+    .chatbox {
+        display: flex;
+        position: fixed;
+        width: 100vw;
+        height: 90%;
+        left: 0%;
+        top: 100%;
+        background-color: white;
+        box-shadow: 0 0 16px 2px grey;
+        flex-direction: column;
+        border-top-left-radius: 16px;
+        border-top-right-radius: 16px;
+    }
+    .chatbox-toggle svg {
+        transform: rotate(90deg);
+        margin: 0.25rem;
+    }
+    .chatbox-toggle { justify-content: center;}
 }
