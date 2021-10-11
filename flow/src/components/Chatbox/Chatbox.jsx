@@ -19,6 +19,14 @@ const ChatBox = (props) => {
     }
 
     useEffect(() => {
+        window.addEventListener("keydown", (e) => {
+            if (inView) {
+                if (e.key === "Enter") SendChat()
+            }
+        })
+    })
+
+    useEffect(() => {
         if (!Socket) return
 
         const handler = ({name, message, isOwn}) => {
