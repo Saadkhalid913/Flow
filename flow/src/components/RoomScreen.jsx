@@ -43,7 +43,7 @@ const RoomScreen = (props) => {
                     <input placeholder = "Name" onChange={e => setName(e.target.value)} />
                 </div>
                 <div>
-                    <input placeholder = "room code" onChange = {(e) => {setCode(e.target.value)}} />
+                    <input placeholder = "Room Code" onChange = {(e) => {setCode(e.target.value)}} />
                     <button onClick ={JoinRoom}>Join Room</button>
                 </div>
                <button onClick ={CreateRoom}>Create Room</button>
