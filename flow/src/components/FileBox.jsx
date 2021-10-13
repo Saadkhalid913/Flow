@@ -23,14 +23,16 @@ const FileBox = (props) => {
                 }
             }}/>}
             <div className = "filebox-files">
+                <br/>
+                <h3>Session Files: </h3>
                 {files.map(f => <div key = {f.name} className = "file-box-file" >
                         <span onClick = {() => window.open(f.link)}>{f.name}</span>
-                        {isAdmin && <button onClick = {() => {
+                        {isAdmin && <button className = "btn-delete" onClick = {() => {
                             const index = files.indexOf(f);
                             const oldFiles = [...files]
                             oldFiles.splice(index, 1)
                             setFiles(oldFiles)
-                        }}>adaw</button>}
+                        }}>Delete</button>}
                         </div>)}
             </div>
         </div>

@@ -19,11 +19,21 @@ const ChatBox = (props) => {
     }
 
     useEffect(() => {
-        window.addEventListener("keydown", (e) => {
+
+        const handler = (e) => {
             if (inView) {
-                if (e.key === "Enter") SendChat()
+                if (e.key === "Enter") {
+                    if (!message) return
+                    Socket.emit("new-chat", message, name, room)
+                    const chat = {name, message, isOwn: true}
+                    setChats([...chats, chat])
+                    setMessage("")
+                }
             }
-        })
+        }
+        window.addEventListener("keydown", handler)
+
+        return () => window.removeEventListener("keydown", handler)
     })
 
     useEffect(() => {
@@ -41,11 +51,11 @@ const ChatBox = (props) => {
     }, [setChats, Socket, chats]) 
 
     let Styles = {}
-    
-    if (window.innerWidth > 768 && inView) Styles = {right: "0%"} 
-    if (window.innerWidth > 768 && !inView) Styles = {right: "-30%"} 
-    if (window.innerWidth < 768 && !inView) Styles = {top: "100%", right: "0%"} 
-    if (window.innerWidth < 768 && inView) Styles = {top: "10%", right: "0%"}
+    const breakpointWidth = 1200
+    if (window.innerWidth > breakpointWidth && inView) Styles = {right: "0%"} 
+    if (window.innerWidth > breakpointWidth && !inView) Styles = {right: "-30%"} 
+    if (window.innerWidth < breakpointWidth && !inView) Styles = {top: "100%", right: "0%"} 
+    if (window.innerWidth < breakpointWidth && inView) Styles = {top: "10%", right: "0%"}
 
     return (
        <React.Fragment>
